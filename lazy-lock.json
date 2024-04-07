@@ -1,0 +1,9 @@
+{
+  "carbon.nvim": { "branch": "master", "commit": "b4f20d4ed231498bc385e0c8cf8eb15a40b833e2" },
+  "copilot.lua": { "branch": "master", "commit": "f7612f5af4a7d7615babf43ab1e67a2d790c13a6" },
+  "lazy.nvim": { "branch": "main", "commit": "af6afefbb46ab29a8a1db69536b04290a9403876" },
+  "nvim-treesitter": { "branch": "master", "commit": "8532b1d941b5859b4844310fa71d6db0f633be33" },
+  "plenary.nvim": { "branch": "master", "commit": "f7adfc4b3f4f91aab6caebf42b3682945fbc35be" },
+  "telescope.nvim": { "branch": "master", "commit": "6312868392331c9c0f22725041f1ec2bef57c751" },
+  "tokyonight.nvim": { "branch": "main", "commit": "092f86550bd83d54c9c6f05e9e2af33a59586aa8" }
+}
