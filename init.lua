@@ -1,4 +1,5 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
 		"git",
@@ -9,6 +10,7 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
@@ -30,9 +32,9 @@ require("lazy").setup({
 				enabled = true,
 				auto_trigger = true,
 				keymap = {
-					accept_line = "<C-j>",
-					next = "<C-l>",
-					prev = "<C-h>",
+					accept_line = "<F7>",
+					next = "<F8>",
+					prev = "<F6>",
 				},
 			},
 			panel = { enabled = false },
@@ -42,13 +44,8 @@ require("lazy").setup({
 			},
 		},
 	},
-	{ "nvim-treesitter/nvim-treesitter" },
 	{
 		"nvim-treesitter/nvim-treesitter",
-		opts = function(_, opts)
-			opts.ensure_installed = opts.ensure_installed or {}
-			vim.list_extend(opts.ensure_installed, { "ron", "rust", "toml" })
-		end,
 	},
 	{
 		"nvim-telescope/telescope.nvim",
@@ -84,10 +81,71 @@ require("lazy").setup({
 			"yamlls",
 		},
 	},
+    {'pbrisbin/vim-mkdir'},
+    {
+        'mrcjkb/rustaceanvim',
+        version = '^4', -- Recommended
+        lazy = false, -- This plugin is already lazy
+    },
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            'hrsh7th/cmp-nvim-lsp',  -- LSP source
+            'hrsh7th/cmp-buffer',    -- Buffer source
+            'hrsh7th/cmp-path',      -- Path source
+            'hrsh7th/cmp-cmdline',   -- Command line source
+            'L3MON4D3/LuaSnip',      -- Snippet engine
+            'saadparwaiz1/cmp_luasnip',  -- Snippet source
+        },
+        config = function()
+              local cmp = require'cmp'
+              cmp.setup({
+                snippet = {
+                  expand = function(args)
+                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+                  end,
+                },
+                mapping = cmp.mapping.preset.insert({
+                  ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+                  ['<C-f>'] = cmp.mapping.scroll_docs(4),
+                  ['<C-Space>'] = cmp.mapping.complete(),
+                  ['<C-e>'] = cmp.mapping.abort(),
+                  ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item.
+                }),
+                sources = cmp.config.sources({
+                  { name = 'nvim_lsp' },
+                  { name = 'luasnip' },
+                }, {
+                  { name = 'buffer' },
+                })
+              })
+
+              -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+              cmp.setup.cmdline('/', {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = {
+                  { name = 'buffer' }
+                }
+              })
+
+              -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+              cmp.setup.cmdline(':', {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                  { name = 'path' }
+                }, {
+                  { name = 'cmdline' }
+                })
+              })
+
+              local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        end
+    }
+
+
 })
-
+        
 require("carbon").setup()
-
 require("nvim-treesitter.configs").setup({
 	ensure_installed = {
 		"rust",
@@ -115,6 +173,16 @@ require("nvim-treesitter.configs").setup({
 		enable = true,
 		additional_vim_regex_highlighting = true,
 	},
+
+	  incremental_selection = {
+	    enable = true,
+	    keymaps = {
+	      init_selection = "gnn",
+	      node_incremental = "grn",
+	      scope_incremental = "grc",
+	      node_decremental = "grm",
+	    },
+	  },
 })
 
 require("conform").setup({
@@ -126,7 +194,8 @@ require("conform").setup({
 
 vim.cmd([[colorscheme slate]])
 vim.cmd([[set number]])
-
+vim.cmd([[set tabstop=4]])
+vim.cmd([[set expandtab]])
 vim.cmd [[
   command! -nargs=0 MakeRunTerminal :botright terminal make run
 ]]
