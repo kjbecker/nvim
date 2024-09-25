@@ -202,6 +202,17 @@ vim.cmd [[
 vim.cmd [[
   command! -nargs=0 MakeTestTerminal :botright terminal make test
 ]]
+
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "html",
+  callback = function()
+    vim.bo.tabstop = 2
+    vim.bo.shiftwidth = 2
+    vim.bo.expandtab = true
+  end
+})
+
 -- REMAPS
 vim.g.mapleader = " "
 vim.api.nvim_set_keymap("n", "<leader>mr", ":MakeRunTerminal<CR>", { noremap = true, silent = true})
